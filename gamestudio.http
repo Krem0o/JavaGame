@@ -1,0 +1,41 @@
+GET http://localhost:8080/api/score/Mlyn
+
+###
+POST http://localhost:8080/api/score
+Content-Type: application/json
+
+{
+  "game": "Mlyn",
+  "player": "Kremo",
+  "points": 200,
+  "date": "2021-04-12T18:19:43.713+00:00"
+}
+
+###
+GET http://localhost:8080/api/comment/Mlyn
+
+###
+POST http://localhost:8080/api/comment
+Content-Type: application/json
+
+  {
+    "game": "Mlyn",
+    "player": "Kremo",
+    "comment": "BEST GAME",
+    "date": "2021-04-12T18:41:43.109+00:00"
+  }
+
+###
+
+GET http://localhost:8080/api/rating/Mlyn
+
+###
+POST http://localhost:8080/api/rating
+Content-Type: application/json
+
+  {
+    "game": "Mlyn",
+    "player": "lala",
+    "rating": 5,
+    "date": "2021-04-12T18:41:39.255+00:00"
+  }

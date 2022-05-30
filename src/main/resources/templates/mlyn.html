@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+  <link rel="stylesheet" href="/css/stylesheet.css"/>
+  <title>Mlyn</title>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js"
+          integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
+  <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css"/>
+
+  <script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function () {
+      $('#clientSideScoreTable2').DataTable({
+        columns: [
+          {data: "player"},
+          {data: "points"},
+          {data: "date"}
+        ],
+        ajax: {url: "/api/score/Mlyn", dataSrc: ''}
+      });
+    });
+    //]]>
+  </script>
+
+  <script type="text/javascript">
+    //<![CDATA[
+    $(document).ready(function () {
+      $('#clientSideScoreTable1').DataTable({
+        columns: [
+          {data: "player"},
+          {data: "comment"},
+          {data: "date"}
+        ],
+        ajax: {url: "/api/comment/Mlyn", dataSrc: ''}
+      });
+    });
+    //]]>
+  </script>
+
+  <script>
+    function showHide() {
+      var x = document.getElementById("rules");
+      if (x.style.display === "none") {
+        x.style.display = "block";
+      } else {
+        x.style.display = "none";
+      }
+    }
+  </script>
+
+</head>
+<body>
+<!--/*@thymesVar id="userController" type="sk.tuke.gamestudio.server.controller.UserController"*/-->
+<!--/*@thymesVar id="mlynController" type="sk.tuke.gamestudio.server.controller.MlynController"*/-->
+
+<header>
+<div th:replace="fragments::header"/>
+</header>
+
+<main>
+  <div class="left">
+  <h1 class="nazov">MLYN</h1>
+
+  <a class="linkAsButton" href="/mlyn/new">New Game</a> <br> <br>
+
+<div class="message">
+  Error Message: <span th:text="${message}"/> <br><br>
+  <span th:if="${@mlynController.isSolved} and ${@userController.logged}">
+  Service Message: <span th:text="${@userController.message}"/> <br><br>
+  </span>
+  Status = <span th:text="${@mlynController.status}"/> <br><br>
+  Count = <span th:text="${@mlynController.count}"/> <br><br>
+  Player = <span th:text="${@mlynController.player}"/> <br>
+</div>
+    <div class="clear"></div>
+
+    <!--
+  TAKE = <span th:text="${@mlynController.take}"/> <br>
+  MOVE = <span th:text="${@mlynController.move}"/> <br>
+  MYTILE = <span th:text="${@mlynController.myTile}"/> <br>
+  NOTMYTILE = <span th:text="${@mlynController.notMyTile}"/> <br>
+
+  myX = <span th:text="${@mlynController.myX}"/> <br>
+  myY = <span th:text="${@mlynController.myY}"/> <br>
+  nextX = <span th:text="${@mlynController.nextX}"/> <br>
+  nextY = <span th:text="${@mlynController.nextY}"/> <br>
+  -->
+  </div>
+
+  <!-- COMMENT -->
+  <div class="right">
+   <span th:if="${@mlynController.isSolved} and ${@userController.logged}">
+    <form action="/comment" method="post">
+      <h2>Add comment</h2>
+      Comment:
+      <textarea rows="8" cols="50" type="text" name="comment" required ></textarea> <br> <br>
+      <input class="linkAsButton" type="submit">
+    </form>
+   </span>
+  </div>
+  <div class="clear"></div>
+
+  <!-- RATING -->
+  <div class="right">
+     <span th:if="${@mlynController.isSolved} and ${@userController.logged}">
+    <form action="/rating" method="post">
+      <h2>Add rating</h2>
+      <p>
+        Rating: <label for="ratings"></label>
+        <select id="ratings" name="ratings">
+          <option value="5">5</option>
+          <option value="4">4</option>
+          <option value="3">3</option>
+          <option value="2">2</option>
+          <option value="1">1</option>
+        </select>
+      </p>
+      <input class="linkAsButton" type="submit">
+    </form>
+  </span>
+  </div>
+
+  <!--
+   <span th:utext="${htmlField}"/>
+-->
+<div class="field">
+  <span th:utext="${@mlynController.htmlField}"/>
+</div>
+  <div class="clear"></div>
+
+  <button class="buttonRight" onclick="showHide()">Show/Hide</button> <br>
+
+  <div id="rules">
+    <h2>Rules</h2>
+    <p>Player must set all of stones, then he can move own stones.</p>
+    <p>If player have 3 stones in a row or in the column he can take enemy tile.</p>
+    <p>Player can move by one position.</p>
+    <p>If player have only 3 stones left, he can move by the more positions. </p>
+    <p>If player have 3 stones in a row or in the column so the enemy cannot take them from him.</p>
+    <p>He can take his stones only if he have If player have 3 stones in a row or in the column.</p>
+    <p>Or if player have an abandoned stone.</p>
+    <p>Player lose the game if he have only 2 stones left or player cannot move his stones anymore.</p>
+    <p>Map is only 7x7.</p>
+    <p>Each player have 9 stones so in total its 18 stones.</p>
+    <p>Score algorithm is 200 - each move.</p>
+  </div>
+
+  <div class="rating">
+  <table>
+    <tr>
+      <th scope="col">RATING</th>
+      <th scope="row"><span th:utext="${@mlynController.avgRating}"/></th>
+    </tr>
+  </table>
+    </div>
+
+<h3>SCORES</h3>
+<table id="clientSideScoreTable2" class="display">
+  <thead>
+  <tr>
+    <th>Player</th>
+    <th>Points</th>
+    <th>Played at</th>
+  </tr>
+  </thead>
+  <tbody>
+  </tbody>
+</table>
+
+  <h3>COMMENTS</h3>
+  <table id="clientSideScoreTable1" class="display">
+    <thead>
+    <tr>
+      <th>Player</th>
+      <th>Comment</th>
+      <th>Played at</th>
+    </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>
+
+</main>
+<footer>
+  <div th:replace="fragments::footer"></div>
+</footer>
+</body>
+</html>

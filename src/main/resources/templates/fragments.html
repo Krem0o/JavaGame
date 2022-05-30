@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<!--/*@thymesVar id="userController" type="sk.tuke.gamestudio.server.controller.UserController"*/-->
+<!--/*@thymesVar id="mlynController" type="sk.tuke.gamestudio.server.controller.MlynController"*/-->
+
+<div th:fragment="header">
+  <!-- LOGO -->
+  <h1> Welcome to Gamestudio</h1>
+  <span th:if="${@userController.logged}">
+    Logged as: <span th:text="${@userController.loggedUser.login}"/>
+    <a class="linkAsButton1" href="/logout">Logout</a> <br> <br>
+  </span>
+
+  <span th:if="not${@userController.logged}">
+    Not logged. Please log or register.
+    <a class="linkAsButton1" href="/">Login or register</a> <br> <br>
+  </span>
+
+  <a class="linkAsButton1" href="/">Back</a> <br> <br>
+
+</div>
+
+<div th:fragment="footer">
+  Hry nie su zmyslom života, ale môžu nám pomôcť ho násjť.
+</div>
+
+</html>
